@@ -5,27 +5,24 @@
  */
 package com.magazynhibernate.dao;
 
-import com.magazynhibernate.data.NumerKarty;
-import java.util.List;
-import java.util.Optional;
-import org.hibernate.Session;
+import com.magazynhibernate.data.Odpad;
 
 
 /**
  *
  * @author damian
  */
-public class NumerKartyDao extends Dao<NumerKarty> {
+public class OdpadDao extends Dao<Odpad> {
 
-	private static NumerKartyDao instance;
+	private static OdpadDao instance;
 
-	private NumerKartyDao() {
-		super(NumerKarty.class);
+	private OdpadDao() {
+		super(Odpad.class);
 	}
 
-	public synchronized static NumerKartyDao getInstance() {
+	public synchronized static OdpadDao getInstance() {
 		if (instance == null) {
-			instance = new NumerKartyDao();
+			instance = new OdpadDao();
 		}
 		return instance;
 	}
@@ -48,5 +45,6 @@ public class NumerKartyDao extends Dao<NumerKarty> {
 //					.list();
 //		}
 //	}
+
 
 }

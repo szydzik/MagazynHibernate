@@ -7,66 +7,57 @@ package com.magazynhibernate.data;
 
 import java.io.Serializable;
 import java.util.Scanner;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 import lombok.*;
+
 /**
  *
  * @author xxbar
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Embeddable
 public class NumerKarty implements Comparable<NumerKarty>, Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long ID;
-    private Integer NUMER;
-    private Integer FIRMA;
-    private Integer ROK;
-    
+    private Integer NKNUMER;
+    private Integer NKFIRMA;
+    private Integer NKROK;
 
     public NumerKarty(String s) {
-        ID = 0l;
         Scanner scan = new Scanner(s).useDelimiter("/");
-        NUMER = scan.hasNextInt() ? scan.nextInt() : null;
-        if (NUMER == null) {
+        NKNUMER = scan.hasNextInt() ? scan.nextInt() : null;
+        if (NKNUMER == null) {
             scan.next();
         }
-        FIRMA = scan.hasNextInt() ? scan.nextInt() : null;
-        if (FIRMA == null) {
+        NKFIRMA = scan.hasNextInt() ? scan.nextInt() : null;
+        if (NKFIRMA == null) {
             scan.next();
         }
-        ROK = scan.hasNextInt() ? scan.nextInt() : null;
+        NKROK = scan.hasNextInt() ? scan.nextInt() : null;
     }
-
 
     @Override
     public String toString() {
-        return NUMER + "/" + FIRMA + "/" + ROK;
+        return NKNUMER + "/" + NKFIRMA + "/" + NKROK;
     }
 
     @Override
     public int compareTo(NumerKarty t) {
-
-        if (ROK.compareTo(t.getROK()) != 0) {
-            return ROK.compareTo(t.getROK());
-        }
-
-        if (FIRMA.compareTo(t.getFIRMA()) != 0) {
-            return FIRMA.compareTo(t.getFIRMA());
-        }
-
-        if (NUMER.compareTo(t.getNUMER()) != 0) {
-            return NUMER.compareTo(t.getNUMER());
-        }
+//        if (NKROK.compareTo(t.getNKROK()) != 0) {
+//            return NKROK.compareTo(t.getNKROK());
+//        }
+//
+//        if (NKFIRMA.compareTo(t.getNKFIRMA()) != 0) {
+//            return NKFIRMA.compareTo(t.getNKFIRMA());
+//        }
+//
+//        if (NKNUMER.compareTo(t.getNKNUMER()) != 0) {
+//            return NKNUMER.compareTo(t.getNKNUMER());
+//        }
 
         return 0;
-
     }
 
 }

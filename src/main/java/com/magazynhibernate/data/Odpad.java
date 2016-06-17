@@ -5,14 +5,15 @@
  */
 package com.magazynhibernate.data;
 
-//import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,22 +23,22 @@ import lombok.*;
  *
  * @author xxbar
  */
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @EqualsAndHashCode
 @Entity
-public class Slownik {
+public class Odpad implements Serializable {
 
+    @Id
+//    @GeneratedValue
+    private Long ID;
     private Integer GRUPA;
     private Integer PODGRUPA;
     private Integer RODZAJ;
     private String TYP;
+    @Column(length = 10000)
     private String OPIS;
-    
-    @Id
-    @GeneratedValue
-    private Integer NR_ODPADU;
 
     @Getter
     private static String[] propTym = {"GRUPA", "PODGRUPA", "RODZAJ", "TYP", "OPIS", "NR_ODPADU"};
@@ -53,8 +54,7 @@ public class Slownik {
 //        this.NR_ODPADU = Integer.parseInt(NR_ODPADU.replaceAll("[^\\d.]", ""));
 //
 //    }
-
-    public Slownik(String row) {
+    public Odpad(String row) {
         Scanner scan = new Scanner(row).useDelimiter(";");
         GRUPA = scan.hasNextInt() ? scan.nextInt() : null;
         if (GRUPA == null) {
@@ -78,16 +78,16 @@ public class Slownik {
         if (OPIS == null) {
             scan.next();
         }
-        NR_ODPADU = scan.hasNextInt() ? scan.nextInt() : null;
+        ID = scan.hasNextLong() ? scan.nextLong() : null;
 
     }
 
-    public static List<Slownik> Open(Path path) {
+    public static List<Odpad> Open(Path path) {
 
         try {
             List<String> lines = Files.readAllLines(path, StandardCharsets.ISO_8859_1);
             String firstLine = lines.remove(0);
-            return lines.stream().map(row -> new Slownik(row)).collect(Collectors.toList());
+            return lines.stream().map(row -> new Odpad(row)).collect(Collectors.toList());
         } catch (IOException ex) {
             System.out.println("Błąd odczytu pliku: \n" + ex);
             return null;

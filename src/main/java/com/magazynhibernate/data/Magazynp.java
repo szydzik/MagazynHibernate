@@ -6,6 +6,7 @@
 package com.magazynhibernate.data;
 
 //import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import com.magazynhibernate.dao.OdpadDao;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
@@ -16,17 +17,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
 import lombok.*;
 
 /**
@@ -41,23 +41,27 @@ import lombok.*;
 public class Magazynp implements Serializable {
 
     @Id
-    @GeneratedValue
+//    @GeneratedValue
     private Long ID;
-    private Integer NR_MAG;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "magazynp")
+
+    @Embedded
     private NumerKarty NR_KARTY;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "magazynp")
-    private Integer NR_ODPADU;
+
+    @OneToOne
+    @JoinColumn(name = "ODPAD_ID")
+    private Odpad ODPAD;
+
     private Integer NR_KLIENTA;
     private Integer FIRMA;
     private String JEDN;
     private Double MASA;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date DATAD;
     @Getter
-    private static String[] propTym = {"NR_MAG", "NR_KARTY", "NR_ODPADU", "NR_KLIENTA", "FIRMA", "JEDN", "MASA", "DATAD"};
+    private static String[] propTym = {"NR_MAG", "NR_KARTY", "ODPAD", "NR_KLIENTA", "FIRMA", "JEDN", "MASA", "DATAD"};
     @Getter
-    private static String[] colTym = {"NR_MAG", "NR_KARTY", "NR_ODPADU", "NR_KLIENTA", "FIRMA", "JEDN", "MASA", "DATAD"};
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+    private static String[] colTym = {"NR_MAG", "NR_KARTY", "ODPAD", "NR_KLIENTA", "FIRMA", "JEDN", "MASA", "DATAD"};
+    private static DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
 //    public Magazynp(String NR_MAG, String NR_KARTY, String NR_ODPADU, String NR_KLIENTA, String FIRMA, String JEDN, String MASA, String DATAD) {
 //        ID = 0l;
@@ -78,26 +82,34 @@ public class Magazynp implements Serializable {
 //            System.out.println("Błąd: " + ex);
 //        }
 //    }
+    public Magazynp(String row, List<Odpad> odpady) {
 
-    public Magazynp(String row) {
-        ID = 0l;
         Scanner scan = new Scanner(row).useDelimiter(";");
 
-        NR_MAG = scan.hasNextInt() ? scan.nextInt() : null;
-        if (NR_MAG == null) {
+        ID = scan.hasNextLong() ? scan.nextLong() : null;
+        if (ID == null) {
             scan.next();
         }
         NR_KARTY = new NumerKarty(scan.hasNext() ? scan.next() : null);
         if (NR_KARTY == null) {
             scan.next();
         }
-        NR_ODPADU = scan.hasNextInt() ? scan.nextInt() : null;
-        if (NR_ODPADU == null) {
+
+        Long NR_ODPADU = scan.hasNextLong() ? scan.nextLong() : null;
+        if (NR_ODPADU != null) {
+//            this.ODPAD = odpady.stream().filter(o -> Objects.equals(o.getID(), NR_ODPADU)).findAny().orElse(null);
+               this.ODPAD = OdpadDao.getInstance().findOne(NR_ODPADU);
+        }
+        System.out.println("ODPAD: "+ODPAD);
+//        ODPAD = null;
+        if (ODPAD == null) {
             scan.next();
         }
+
         NR_KLIENTA = scan.hasNextInt() ? scan.nextInt() : null;
         if (NR_KLIENTA == null) {
             scan.next();
+            
         }
         FIRMA = scan.hasNextInt() ? scan.nextInt() : null;
         if (FIRMA == null) {
@@ -108,22 +120,25 @@ public class Magazynp implements Serializable {
             scan.next();
         }
         this.MASA = scan.hasNext() ? Double.parseDouble(scan.next().replaceAll("[^\\d.]", "")) : null;
+//        this.MASA = scan.hasNext() ? scan.nextDouble() : null;
         if (MASA == null) {
             scan.next();
         }
         try {
-             this.DATAD = scan.hasNext() ? new Date(DATE_FORMAT.parse(scan.next()).getTime()) : null;
+            this.DATAD = scan.hasNext() ? new Date(DATE_FORMAT.parse(scan.next()).getTime()) : null;
         } catch (ParseException ex) {
             this.DATAD = null;
             System.out.println("Błąd: " + ex);
         }
     }
 
-    public static List<Magazynp> Open(Path path) {
+    public static List<Magazynp> Open(Path pathMagazyn, List<Odpad> listOdpad) {
         try {
-            List<String> lines = Files.readAllLines(path, StandardCharsets.ISO_8859_1);
+
+            List<String> lines = Files.readAllLines(pathMagazyn, StandardCharsets.ISO_8859_1);
+
             String firstLine = lines.remove(0);
-            return lines.stream().map(row -> new Magazynp(row)).collect(Collectors.toList());
+            return lines.stream().map(row -> new Magazynp(row, listOdpad)).collect(Collectors.toList());
         } catch (IOException ex) {
             System.out.println("Błąd odczytu pliku: \n" + ex);
             return null;

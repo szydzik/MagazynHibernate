@@ -17,50 +17,69 @@ import org.hibernate.criterion.Restrictions;
  * @param <T>
  */
 public class Dao<T> {
-	
-	protected final Class<T> clazz;
 
-	public Dao(Class<T> clazz) {
-		this.clazz = clazz;
-	}
-	
-	public T insert(T t) {
-		try (Session session = JpaUtils.getSessionFactory().openSession()) {
-			Transaction tr = session.beginTransaction();
-			session.save(t);
-			tr.commit();
-			return t;
-		}
-	}
+    protected final Class<T> clazz;
 
-	public void update(T t) {
-		try (Session session = JpaUtils.getSessionFactory().openSession()) {
-			Transaction tr = session.beginTransaction();
-			session.update(t);
-			tr.commit();
-		}
-	}
+    public Dao(Class<T> clazz) {
+        this.clazz = clazz;
+    }
 
-	public void delete(T t) {
-		try (Session session = JpaUtils.getSessionFactory().openSession()) {
-			Transaction tr = session.beginTransaction();
-			session.delete(t);
-			tr.commit();
-		}
-	}
+    public T insert(T t) {
+        try (Session session = JpaUtils.getSessionFactory().openSession()) {
+            Transaction tr = session.beginTransaction();
+            session.save(t);
+            tr.commit();
+            return t;
+        }
+    }
 
-	public T findOne(int id) {
-		try (Session session = JpaUtils.getSessionFactory().openSession()) {
-			T t = (T) session.createCriteria(clazz).add(Restrictions.idEq(id)).uniqueResult();
-			return t;
-		}
-	}
+    public void update(T t) {
+        try (Session session = JpaUtils.getSessionFactory().openSession()) {
+            Transaction tr = session.beginTransaction();
+            session.update(t);
+            tr.commit();
+        }
+    }
 
-	public List<T> findAll() {
-		try (Session session = JpaUtils.getSessionFactory().openSession()) {
-			List<T> list = session.createCriteria(clazz).list();
-			return list;
-		}
-	}
-	
+    public void delete(T t) {
+        try (Session session = JpaUtils.getSessionFactory().openSession()) {
+            Transaction tr = session.beginTransaction();
+            session.delete(t);
+            tr.commit();
+        }
+    }
+
+    public T findOne(long id) {
+        try (Session session = JpaUtils.getSessionFactory().openSession()) {
+            T t = (T) session.createCriteria(clazz).add(Restrictions.idEq(id)).uniqueResult();
+            return t;
+        }
+    }
+
+    public List<T> findAll() {
+        try (Session session = JpaUtils.getSessionFactory().openSession()) {
+            List<T> list = session.createCriteria(clazz).list();
+            return list;
+        }
+    }
+
+    public List<T> insertBatch(List<T> t) {
+        try (Session session = JpaUtils.getSessionFactory().openSession()) {
+            Transaction tr = session.beginTransaction();
+            int i = 0;
+            t.stream().forEach((temp) -> {
+                session.save(temp);
+
+                if (i % 50 == 0) {
+                    session.flush();
+                    session.clear();
+                    tr.commit();
+                }
+            });
+
+            tr.commit();
+            return t;
+        }
+    }
+
 }

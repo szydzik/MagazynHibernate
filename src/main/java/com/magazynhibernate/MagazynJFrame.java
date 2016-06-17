@@ -3,7 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.magazynhibernate.dao;
+package com.magazynhibernate;
+
+import com.magazynhibernate.dao.MagazynpDao;
+import com.magazynhibernate.dao.OdpadDao;
+import com.magazynhibernate.data.Magazynp;
+import com.magazynhibernate.data.NumerKarty;
+import com.magazynhibernate.data.Odpad;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -35,6 +45,9 @@ public class MagazynJFrame extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
         editButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
+        openButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        openButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -94,6 +107,27 @@ public class MagazynJFrame extends javax.swing.JFrame {
             }
         });
 
+        openButton.setText("Otworz \"magazyn\"");
+        openButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openButtonActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        openButton1.setText("Otworz \"Odpady\"");
+        openButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -107,6 +141,12 @@ public class MagazynJFrame extends javax.swing.JFrame {
                 .addComponent(editButton)
                 .addGap(34, 34, 34)
                 .addComponent(refreshButton)
+                .addGap(41, 41, 41)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(openButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(openButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(140, 140, 140)
+                .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -117,8 +157,12 @@ public class MagazynJFrame extends javax.swing.JFrame {
                     .addComponent(addButton)
                     .addComponent(deleteButton)
                     .addComponent(editButton)
-                    .addComponent(refreshButton))
-                .addContainerGap(45, Short.MAX_VALUE))
+                    .addComponent(refreshButton)
+                    .addComponent(openButton)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(openButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -156,6 +200,48 @@ public class MagazynJFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_refreshButtonActionPerformed
 
+    private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
+
+        JFileChooser chooser = new JFileChooser();
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Data CSV", "csv");
+        chooser.setFileFilter(filter);
+
+        int returnVal = chooser.showOpenDialog(this);
+
+        List<Odpad> listOdpad = OdpadDao.getInstance().findAll();
+        returnVal = chooser.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            List<Magazynp> list = Magazynp.Open(chooser.getSelectedFile().getAbsoluteFile().toPath(), listOdpad);
+            MagazynpDao.getInstance().insertBatch(list);
+            
+        }
+
+    }//GEN-LAST:event_openButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+//        Odpad o1 = new Odpad(903l, 10, 5, 4, "B", "Pyl grafitowy");
+//        OdpadDao.getInstance().insert(o1);
+//        Magazynp m1 = new Magazynp(1l, new NumerKarty(1, 0, 2005), o1, 409, 0, "mg.", 0.020, new Date());
+//        
+//        MagazynpDao.getInstance().insert(m1);
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void openButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButton1ActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Data CSV", "csv");
+        chooser.setFileFilter(filter);
+        int returnVal;
+        returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            List<Odpad> listOdpad = Odpad.Open(chooser.getSelectedFile().getAbsoluteFile().toPath());
+            OdpadDao.getInstance().insertBatch(listOdpad);
+        }
+    }//GEN-LAST:event_openButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -170,24 +256,30 @@ public class MagazynJFrame extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MagazynJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MagazynJFrame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MagazynJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MagazynJFrame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MagazynJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MagazynJFrame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MagazynJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MagazynJFrame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MagazynJFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MagazynJFrame().setVisible(true);
         });
     }
 
@@ -195,10 +287,13 @@ public class MagazynJFrame extends javax.swing.JFrame {
     private javax.swing.JButton addButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
+    private javax.swing.JButton openButton;
+    private javax.swing.JButton openButton1;
     private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }
