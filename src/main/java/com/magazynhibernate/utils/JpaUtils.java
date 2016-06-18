@@ -39,7 +39,15 @@ public class JpaUtils {
 		properties.setProperty("hibernate.show_sql", "true");
 		properties.setProperty("hibernate.format_sql", "true");
 		properties.setProperty("hibernate.use_sql_comments", "true");
+                
                 properties.setProperty("hibernate.jdbc.batch_size", "20");
+                properties.setProperty("hibernate.jdbc.batch_versioned_data", "true");
+                properties.setProperty("hibernate.order_inserts", "true");
+                properties.setProperty("hibernate.order_updates", "true");
+                
+                
+                
+                
 //		properties.setProperty("hibernate.temp.use_jdbc_metadata_defaults", "false");
 		
 

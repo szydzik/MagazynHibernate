@@ -8,11 +8,11 @@ package com.magazynhibernate;
 import com.magazynhibernate.dao.MagazynpDao;
 import com.magazynhibernate.dao.OdpadDao;
 import com.magazynhibernate.data.Magazynp;
-import com.magazynhibernate.data.NumerKarty;
 import com.magazynhibernate.data.Odpad;
-import java.util.Date;
+import com.magazynhibernate.model.MagazynModel;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -21,11 +21,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class MagazynJFrame extends javax.swing.JFrame {
 
+    private MagazynModel model;
+
     /**
      * Creates new form MagazynJFrame
      */
     public MagazynJFrame() {
+        this.model = new MagazynModel();
+
         initComponents();
+        jTable.setModel(model);
     }
 
     /**
@@ -68,14 +73,14 @@ public class MagazynJFrame extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 843, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -107,21 +112,21 @@ public class MagazynJFrame extends javax.swing.JFrame {
             }
         });
 
-        openButton.setText("Otworz \"magazyn\"");
+        openButton.setText("Dodaj dane z pliku \"Magazynp.csv\"");
         openButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openButtonActionPerformed(evt);
             }
         });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Wyświetl pełne informacje");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        openButton1.setText("Otworz \"Odpady\"");
+        openButton1.setText("Dodaj dane z pliku \"Slownik.csv\"");
         openButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openButton1ActionPerformed(evt);
@@ -189,15 +194,26 @@ public class MagazynJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-
+        int selected = jTable.getSelectedRow(); // wczytanie zaznaczonego wiersza tabeli;
+        System.out.println("selected = " + selected);
+        if (selected >= 0) {
+            selected = jTable.convertRowIndexToModel(selected);
+            int result = JOptionPane.showOptionDialog(this, "Czy jesteś pewien, że chcesz usunąć zaznaczony element?", "Pytanie", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE, null, null, null);
+            if (result == JOptionPane.YES_OPTION) {
+                model.delete(model.getFromIndex(selected));
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Proszę zaznaczyć pozycję do usunięcia");
+        }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-
+        
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-
+        model.refresh();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
@@ -212,20 +228,20 @@ public class MagazynJFrame extends javax.swing.JFrame {
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             List<Magazynp> list = Magazynp.Open(chooser.getSelectedFile().getAbsoluteFile().toPath(), listOdpad);
-            MagazynpDao.getInstance().insertBatch(list);
-            
+            MagazynpDao.getInstance().insertBatch1(list);
+
         }
 
     }//GEN-LAST:event_openButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-//        Odpad o1 = new Odpad(903l, 10, 5, 4, "B", "Pyl grafitowy");
-//        OdpadDao.getInstance().insert(o1);
-//        Magazynp m1 = new Magazynp(1l, new NumerKarty(1, 0, 2005), o1, 409, 0, "mg.", 0.020, new Date());
-//        
-//        MagazynpDao.getInstance().insert(m1);
-
+        int selected = jTable.getSelectedRow(); // wczytanie zaznaczonego wiersza tabeli;
+        System.out.println("selected = " + selected);
+        if (selected >= 0) {
+            selected = jTable.convertRowIndexToModel(selected);
+            JOptionPane.showMessageDialog(this, "Zaznaczono: "+model.getFromIndex(selected));
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void openButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButton1ActionPerformed
@@ -236,9 +252,24 @@ public class MagazynJFrame extends javax.swing.JFrame {
         returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             List<Odpad> listOdpad = Odpad.Open(chooser.getSelectedFile().getAbsoluteFile().toPath());
-            OdpadDao.getInstance().insertBatch(listOdpad);
+            OdpadDao.getInstance().insertBatch1(listOdpad);
         }
     }//GEN-LAST:event_openButton1ActionPerformed
+
+    public Magazynp getSelectedObj() {
+        int selected = jTable.getSelectedRow(); // wczytanie zaznaczonego wiersza tabeli;
+        System.out.println("selected = " + selected);
+        if (selected >= 0) {
+
+            selected = jTable.convertRowIndexToModel(selected);
+
+            return model.getFromIndex(selected);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Proszę zaznaczyć pozycję do edycji");
+        }
+        return null;
+    }
 
     /**
      * @param args the command line arguments

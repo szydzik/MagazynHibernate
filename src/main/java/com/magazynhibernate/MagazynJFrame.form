@@ -46,7 +46,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="843" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -55,7 +55,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="409" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="427" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -163,7 +163,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="openButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Otworz &quot;magazyn&quot;"/>
+            <Property name="text" type="java.lang.String" value="Dodaj dane z pliku &quot;Magazynp.csv&quot;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openButtonActionPerformed"/>
@@ -171,7 +171,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jButton1"/>
+            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl pe&#x142;ne informacje"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
@@ -179,7 +179,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="openButton1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Otworz &quot;Odpady&quot;"/>
+            <Property name="text" type="java.lang.String" value="Dodaj dane z pliku &quot;Slownik.csv&quot;"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openButton1ActionPerformed"/>

@@ -63,22 +63,20 @@ public class Dao<T> {
         }
     }
 
-    public List<T> insertBatch(List<T> t) {
-        try (Session session = JpaUtils.getSessionFactory().openSession()) {
-            Transaction tr = session.beginTransaction();
-            int i = 0;
-            t.stream().forEach((temp) -> {
-                session.save(temp);
+    public void insertBatch1(List<T> t) {
 
-                if (i % 10000 == 0) {
-                    session.flush();
-                    session.clear();
-                }
-            });
+        Session session = JpaUtils.getSessionFactory().openSession();
+        Transaction tr = session.beginTransaction();
 
-            tr.commit();
-            return t;
+        for (int i = 0; i < t.size(); i++) {
+            session.save( t.get(i));
+            if (i % 20 == 0) {
+                session.flush();
+                session.clear();
+            }
         }
-    }
+        tr.commit();
 
+    }
+    
 }

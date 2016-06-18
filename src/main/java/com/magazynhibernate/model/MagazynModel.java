@@ -15,10 +15,18 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author xxbar
  */
-public class TableModel extends AbstractTableModel {
+public final class MagazynModel extends AbstractTableModel {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm");
-    List<Magazynp> list;
+    private List<Magazynp> list;
+
+    public MagazynModel(List<Magazynp> list) {
+        this.list = list;
+    }
+
+    public MagazynModel() {
+        refresh();
+    }
 
     public void refresh() {
 
@@ -34,29 +42,24 @@ public class TableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 8;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        
         switch (columnIndex) {
             case 0:
                 return list.get(rowIndex).getID();
             case 1:
                 return list.get(rowIndex).getNR_KARTY().toString();
-//            case 2:
-//                return list.get(rowIndex).getPracownik().getID_PRACOWNIK();
+
             case 2: {
                 String s = "" + list.get(rowIndex).getODPAD().getGRUPA()
-                        + "//" + list.get(rowIndex).getODPAD().getPODGRUPA()
-                        + "//" + list.get(rowIndex).getODPAD().getRODZAJ();
+                        + " /" + list.get(rowIndex).getODPAD().getPODGRUPA()
+                        + "/" + list.get(rowIndex).getODPAD().getRODZAJ();
 
                 return s;
             }
-
-//            case 4:
-//                return list.get(rowIndex).getPacjent().getID_PACJENT();
             case 3: {
                 return list.get(rowIndex).getNR_KLIENTA();
             }
@@ -77,4 +80,60 @@ public class TableModel extends AbstractTableModel {
         }
     }
 
+    @Override
+    public String getColumnName(int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                return "ID";
+            case 1:
+                return "NR_KARTY";
+            case 2:
+                return "NR_ODPADU";
+            case 3:
+                return "NR_KLIENTA";
+            case 4:
+                return "FIRMA";
+            case 5:
+                return "JEDN";
+            case 6:
+                return "MASA";
+            case 7:
+                return "DATAD";
+            default:
+                return "?";
+        }
+    }
+
+    public Magazynp insert(Magazynp m) {
+        try {
+            return MagazynpDao.getInstance().insert(m);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            refresh();
+        }
+    }
+
+    public void update(Magazynp t) {
+        MagazynpDao.getInstance().update(t);
+        refresh();
+    }
+
+    public void delete(Magazynp t) {
+        MagazynpDao.getInstance().delete(t);
+        refresh();
+    }
+
+    public Magazynp findOne(long id) {
+        return MagazynpDao.getInstance().findOne(id);
+    }
+
+    public List<Magazynp> findAll() {
+        return MagazynpDao.getInstance().findAll();
+    }
+
+    public Magazynp getFromIndex(int index) {
+        return list.get(index);
+    }
 }

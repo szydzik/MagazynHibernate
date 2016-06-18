@@ -22,7 +22,6 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -97,9 +96,7 @@ public class Magazynp implements Serializable {
         }
         Long NR_ODPADU = scan.hasNextLong() ? scan.nextLong() : null;
         if (NR_ODPADU != null) {
-            Odpad od = OdpadDao.getInstance().findOne(NR_ODPADU);
-
-            this.ODPAD = od == null ? null : od;
+            this.ODPAD = (Odpad) odpady.stream().filter(o -> Objects.equals(o.getID(), NR_ODPADU)).findAny().orElse(null);
         }
         if (ODPAD == null) {
             scan.next();
