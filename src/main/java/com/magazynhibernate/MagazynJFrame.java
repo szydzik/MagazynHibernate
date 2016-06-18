@@ -208,9 +208,7 @@ public class MagazynJFrame extends javax.swing.JFrame {
         chooser.setFileFilter(filter);
 
         int returnVal = chooser.showOpenDialog(this);
-
         List<Odpad> listOdpad = OdpadDao.getInstance().findAll();
-        returnVal = chooser.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             List<Magazynp> list = Magazynp.Open(chooser.getSelectedFile().getAbsoluteFile().toPath(), listOdpad);

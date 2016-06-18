@@ -27,6 +27,8 @@ public class NumerKarty implements Comparable<NumerKarty>, Serializable {
 
     public NumerKarty(String s) {
         Scanner scan = new Scanner(s).useDelimiter("/");
+        System.out.println("String numeru karty: "+s);
+        
         NKNUMER = scan.hasNextInt() ? scan.nextInt() : null;
         if (NKNUMER == null) {
             scan.next();

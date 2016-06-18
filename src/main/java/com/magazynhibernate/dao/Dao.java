@@ -70,10 +70,9 @@ public class Dao<T> {
             t.stream().forEach((temp) -> {
                 session.save(temp);
 
-                if (i % 50 == 0) {
+                if (i % 10000 == 0) {
                     session.flush();
                     session.clear();
-                    tr.commit();
                 }
             });
 

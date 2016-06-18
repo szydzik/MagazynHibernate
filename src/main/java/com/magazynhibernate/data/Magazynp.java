@@ -90,26 +90,24 @@ public class Magazynp implements Serializable {
         if (ID == null) {
             scan.next();
         }
-        NR_KARTY = new NumerKarty(scan.hasNext() ? scan.next() : null);
+        String numer = scan.hasNext() ? scan.next() : "";
+        NR_KARTY = numer.isEmpty() ? null : new NumerKarty(numer);
         if (NR_KARTY == null) {
             scan.next();
         }
-
         Long NR_ODPADU = scan.hasNextLong() ? scan.nextLong() : null;
         if (NR_ODPADU != null) {
-//            this.ODPAD = odpady.stream().filter(o -> Objects.equals(o.getID(), NR_ODPADU)).findAny().orElse(null);
-               this.ODPAD = OdpadDao.getInstance().findOne(NR_ODPADU);
+            Odpad od = OdpadDao.getInstance().findOne(NR_ODPADU);
+
+            this.ODPAD = od == null ? null : od;
         }
-        System.out.println("ODPAD: "+ODPAD);
-//        ODPAD = null;
         if (ODPAD == null) {
             scan.next();
         }
-
         NR_KLIENTA = scan.hasNextInt() ? scan.nextInt() : null;
         if (NR_KLIENTA == null) {
             scan.next();
-            
+
         }
         FIRMA = scan.hasNextInt() ? scan.nextInt() : null;
         if (FIRMA == null) {
@@ -119,8 +117,8 @@ public class Magazynp implements Serializable {
         if (JEDN == null) {
             scan.next();
         }
+
         this.MASA = scan.hasNext() ? Double.parseDouble(scan.next().replaceAll("[^\\d.]", "")) : null;
-//        this.MASA = scan.hasNext() ? scan.nextDouble() : null;
         if (MASA == null) {
             scan.next();
         }
