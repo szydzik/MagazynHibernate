@@ -8,8 +8,10 @@ package com.magazynhibernate;
 import com.magazynhibernate.dao.MagazynpDao;
 import com.magazynhibernate.dao.OdpadDao;
 import com.magazynhibernate.data.Magazynp;
+import com.magazynhibernate.data.NumerKarty;
 import com.magazynhibernate.data.Odpad;
 import com.magazynhibernate.model.MagazynModel;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -191,6 +193,8 @@ public class MagazynJFrame extends javax.swing.JFrame {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
 
+        Magazynp m = new Magazynp(1l, new NumerKarty("1055/3/2012"), OdpadDao.getInstance().findOne(2), 409, 0, "Mg.", 11.1, new Date());
+        model.insert(m);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -209,7 +213,10 @@ public class MagazynJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        
+        Magazynp m = model.getFromIndex(0);
+        m.setMASA(100.0);
+        m.setJEDN("ml");
+        model.update(m);
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
@@ -240,7 +247,7 @@ public class MagazynJFrame extends javax.swing.JFrame {
         System.out.println("selected = " + selected);
         if (selected >= 0) {
             selected = jTable.convertRowIndexToModel(selected);
-            JOptionPane.showMessageDialog(this, "Zaznaczono: "+model.getFromIndex(selected));
+            JOptionPane.showMessageDialog(this, "Zaznaczono: " + model.getFromIndex(selected));
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
