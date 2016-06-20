@@ -193,7 +193,7 @@ public class MagazynJFrame extends javax.swing.JFrame {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
 
-        Magazynp m = new Magazynp(1l, new NumerKarty("1055/3/2012"), OdpadDao.getInstance().findOne(2), 409, 0, "Mg.", 11.1, new Date());
+        Magazynp m = new Magazynp(1l, new NumerKarty("1055/3/2012"), OdpadDao.getInstance().findOne(2l), 409, 0, "Mg.", 11.1, new Date());
         model.insert(m);
     }//GEN-LAST:event_addButtonActionPerformed
 

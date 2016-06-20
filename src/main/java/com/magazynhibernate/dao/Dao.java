@@ -14,6 +14,7 @@ import org.hibernate.criterion.Restrictions;
 /**
  *
  * @author damian
+ * @authow szydzik
  * @param <T>
  */
 public class Dao<T> {
