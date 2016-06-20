@@ -6,6 +6,7 @@
 package com.magazynhibernate.model;
 
 import com.magazynhibernate.dao.MagazynpDao;
+import com.magazynhibernate.dao.OdpadDao;
 import com.magazynhibernate.data.Magazynp;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -51,11 +52,11 @@ public final class MagazynModel extends AbstractTableModel {
             case 0:
                 return list.get(rowIndex).getID();
             case 1:
-                return list.get(rowIndex).getNR_KARTY().toString();
+                return list.get(rowIndex).getNR_KARTY();
 
             case 2: {
                 String s = "" + list.get(rowIndex).getODPAD().getGRUPA()
-                        + " /" + list.get(rowIndex).getODPAD().getPODGRUPA()
+                        + "/" + list.get(rowIndex).getODPAD().getPODGRUPA()
                         + "/" + list.get(rowIndex).getODPAD().getRODZAJ();
 
                 return s;
@@ -117,6 +118,7 @@ public final class MagazynModel extends AbstractTableModel {
 
     public void update(Magazynp t) {
         MagazynpDao.getInstance().update(t);
+        OdpadDao.getInstance().update(t.getODPAD());
         refresh();
     }
 
@@ -136,4 +138,19 @@ public final class MagazynModel extends AbstractTableModel {
     public Magazynp getFromIndex(int index) {
         return list.get(index);
     }
+    
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        try {
+            if (getValueAt(0, columnIndex).getClass() != null) {
+                return getValueAt(0, columnIndex).getClass();
+            } else {
+                return (new Object()).getClass();
+            }
+        } catch (java.lang.NullPointerException ex) {
+            System.out.println("java.lang.NullPointerException  columnIndex=" + columnIndex);
+            return (new Object()).getClass();
+        }
+    }
+    
 }

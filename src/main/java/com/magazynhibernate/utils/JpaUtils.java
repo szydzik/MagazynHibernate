@@ -17,7 +17,7 @@ import com.magazynhibernate.data.Odpad;
 
 /**
  *
- * @author damian
+ * @author szydzik
  */
 @UtilityClass
 public class JpaUtils {
