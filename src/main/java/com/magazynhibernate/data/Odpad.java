@@ -27,7 +27,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Entity
+@Entity(name = "odpadh")
 public class Odpad implements Serializable {
 
     @Id

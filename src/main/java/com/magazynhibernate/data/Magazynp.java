@@ -32,7 +32,7 @@ import lombok.*;
  *
  * @author xxbar
  */
-@Entity
+@Entity(name = "magazynph")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
