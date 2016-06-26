@@ -225,6 +225,7 @@ public class MagazynJFrame extends javax.swing.JFrame {
             m.getODPAD().setPODGRUPA(222);
             m.getODPAD().setRODZAJ(333);
             model.update(m);
+            
         }
 
 
