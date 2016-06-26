@@ -101,11 +101,6 @@ public class MagazynJFrame extends javax.swing.JFrame {
         });
 
         editButton.setText("Edytuj");
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
 
         refreshButton.setText("Odśwież");
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
@@ -211,25 +206,6 @@ public class MagazynJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Proszę zaznaczyć pozycję do usunięcia");
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
-
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        int selected = jTable.getSelectedRow(); // wczytanie zaznaczonego wiersza tabeli;
-        System.out.println("selected = " + selected);
-        if (selected >= 0) {
-            selected = jTable.convertRowIndexToModel(selected);
-            Magazynp m = model.getFromIndex(selected);
-            m.setMASA(100.0);
-            m.setNR_KLIENTA(22222);
-            m.setJEDN("ml");
-            m.getODPAD().setGRUPA(111);
-            m.getODPAD().setPODGRUPA(222);
-            m.getODPAD().setRODZAJ(333);
-            model.update(m);
-            
-        }
-
-
-    }//GEN-LAST:event_editButtonActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         model.refresh();
